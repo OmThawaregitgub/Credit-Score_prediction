@@ -42,47 +42,14 @@ Lauki Finance, a leading Non-Banking Financial Company (NBFC) in India, has coll
 1. **Performance Monitoring**: Continuously evaluates model accuracy and reliability.
 2. **Operational Integration**: Facilitates STP for efficient application processing.
 
----
-
-## ⏱️ Timeline
-
-* **Phase 1**: 2 months (Development & Implementation).
-* **Phase 2**: TBD based on Phase 1 outcomes.
-
----
-
-## 💰 Budget
-
-* **Phase 1 Costs**: Estimated at **\$18,000/month**, capped at **\$36,000**.
 
 ---
 
 ## 👥 Stakeholders
 
-### **AtliQ AI**
-
-* **Peter Pandey**: Data Scientist
-* **Tony Sharma**: Data Science Team Lead
-* **Nick Puri**: Product Owner
-
-### **Lauki Finance**
-
-* **Steve Singh**: Project Sponsor
-* **Wanda Mishra**: Client Point of Contact
+* **Om thaware**: Data Scientist
 
 ---
 
-## 📜 Terms and Conditions
 
-* Valid for the duration of **Phase 1** and **Phase 2**, subject to renewal.
-* Scope or deliverable changes may impact cost and timeline.
 
----
-
-## 🤝 Acknowledgments
-
-This project is part of the **Codebasics Machine Learning Course**. All rights reserved to [Codebasics.io](https://codebasics.io).
-
----
-
-Feel free to copy, edit, and enhance this template as per your project needs! Let me know if you'd like assistance customizing it further or adding specific elements.
