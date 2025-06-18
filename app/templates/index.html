@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lauki Finance | Credit Risk Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --dark-primary: #1a237e;
+            --dark-secondary: #121858;
+            --accent-color: #4fc3f7;
+            --text-light: #f5f5f5;
+            --text-muted: #b0bec5;
+        }
+        
+        body {
+            background: url('/static/images/bank-bg-dark.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: var(--text-light);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .overlay {
+            background-color: rgba(0, 0, 0, 0.85);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        
+        .dashboard-container {
+            position: relative;
+            z-index: 1;
+            padding: 2rem 0;
+        }
+        
+        .dashboard-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: rgba(26, 35, 126, 0.7);
+            border-radius: 10px;
+            border-bottom: 3px solid var(--accent-color);
+        }
+        
+        .dashboard-header h1 {
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .dashboard-header .logo {
+            font-size: 2.5rem;
+            color: var(--accent-color);
+            margin-right: 10px;
+        }
+        
+        .form-card {
+            background: rgba(18, 24, 88, 0.8);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(79, 195, 247, 0.2);
+            margin-bottom: 2rem;
+        }
+        
+        .form-label {
+            color: var(--accent-color);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .form-control, .form-select {
+            background-color: rgba(0, 0, 0, 0.3);
+            border: 1px solid #303f9f;
+            color: var(--text-light);
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            background-color: rgba(0, 0, 0, 0.5);
+            border-color: var(--accent-color);
+            color: white;
+            box-shadow: 0 0 0 0.25rem rgba(79, 195, 247, 0.25);
+        }
+        
+        .ratio-display {
+            background-color: rgba(0, 0, 0, 0.3);
+            border: 1px solid #303f9f;
+            color: var(--text-light);
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            font-weight: 600;
+        }
+        
+        .btn-calculate {
+            background: linear-gradient(135deg, var(--dark-primary), #303f9f);
+            border: none;
+            padding: 0.75rem 2rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            border-radius: 8px;
+            transition: all 0.3s;
+            margin-top: 1rem;
+            width: 100%;
+            max-width: 300px;
+        }
+        
+        .btn-calculate:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(135deg, #303f9f, var(--dark-primary));
+        }
+        
+        .results-card {
+            background: rgba(18, 24, 88, 0.8);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border-top: 4px solid var(--accent-color);
+            display: none;
+        }
+        
+        .result-item {
+            text-align: center;
+            padding: 1.5rem;
+        }
+        
+        .result-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-top: 0.5rem;
+            color: var(--accent-color);
+        }
+        
+        .result-label {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        @media (max-width: 768px) {
+            .form-card, .results-card {
+                padding: 1.5rem;
+            }
+            
+            .result-value {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="overlay"></div>
+    <div class="dashboard-container container">
+        <div class="dashboard-header">
+            <h1><i class="fas fa-chart-line logo"></i> Lauki Finance</h1>
+            <p class="lead">Credit Risk Assessment Dashboard</p>
+        </div>
+        
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="form-card">
+                    <form id="riskForm">
+                        <!-- Row 1 -->
+                        <div class="row mb-4">
+                            <div class="col-md-4">
+                                <label for="age" class="form-label">Age</label>
+                                <input type="number" class="form-control" id="age" name="age" 
+                                       min="18" max="100" value="{{ default_age }}" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="income" class="form-label">Income (₹)</label>
+                                <input type="number" class="form-control" id="income" name="income" 
+                                       min="0" value="{{ default_income }}" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="loan_amount" class="form-label">Loan Amount (₹)</label>
+                                <input type="number" class="form-control" id="loan_amount" name="loan_amount" 
+                                       min="0" value="{{ default_loan_amount }}" required>
+                            </div>
+                        </div>
+
+                        <!-- Row 2 -->
+                        <div class="row mb-4">
+                            <div class="col-md-4">
+                                <label class="form-label">Loan to Income Ratio</label>
+                                <div class="ratio-display" id="loanRatioDisplay">0.00</div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="loan_tenure_months" class="form-label">Loan Tenure (months)</label>
+                                <input type="number" class="form-control" id="loan_tenure_months" name="loan_tenure_months" 
+                                       min="0" value="{{ default_loan_tenure_months }}" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="avg_dpd_per_delinquency" class="form-label">Avg DPD</label>
+                                <input type="number" class="form-control" id="avg_dpd_per_delinquency" name="avg_dpd_per_delinquency" 
+                                       min="0" value="{{ default_avg_dpd_per_delinquency }}" required>
+                            </div>
+                        </div>
+
+                        <!-- Row 3 -->
+                        <div class="row mb-4">
+                            <div class="col-md-4">
+                                <label for="delinquency_ratio" class="form-label">Delinquency Ratio (%)</label>
+                                <input type="number" class="form-control" id="delinquency_ratio" name="delinquency_ratio" 
+                                       min="0" max="100" value="{{ default_delinquency_ratio }}" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="credit_utilization_ratio" class="form-label">Credit Utilization Ratio (%)</label>
+                                <input type="number" class="form-control" id="credit_utilization_ratio" name="credit_utilization_ratio" 
+                                       min="0" max="100" value="{{ default_credit_utilization_ratio }}" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="num_open_accounts" class="form-label">Open Loan Accounts</label>
+                                <input type="number" class="form-control" id="num_open_accounts" name="num_open_accounts" 
+                                       min="1" max="4" value="{{ default_num_open_accounts }}" required>
+                            </div>
+                        </div>
+
+                        <!-- Row 4 -->
+                        <div class="row mb-4">
+                            <div class="col-md-4">
+                                <label for="residence_type" class="form-label">Residence Type</label>
+                                <select class="form-select" id="residence_type" name="residence_type" required>
+                                    <option value="Owned">Owned</option>
+                                    <option value="Rented">Rented</option>
+                                    <option value="Mortgage">Mortgage</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="loan_purpose" class="form-label">Loan Purpose</label>
+                                <select class="form-select" id="loan_purpose" name="loan_purpose" required>
+                                    <option value="Education">Education</option>
+                                    <option value="Home">Home</option>
+                                    <option value="Auto">Auto</option>
+                                    <option value="Personal">Personal</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="loan_type" class="form-label">Loan Type</label>
+                                <select class="form-select" id="loan_type" name="loan_type" required>
+                                    <option value="Unsecured">Unsecured</option>
+                                    <option value="Secured">Secured</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-calculate">
+                                <i class="fas fa-calculator me-2"></i> Calculate Risk
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Results Card -->
+                <div class="results-card" id="results">
+                    <h3 class="text-center mb-4"><i class="fas fa-chart-pie me-2"></i>Risk Assessment Results</h3>
+                    <div class="row">
+                        <div class="col-md-4 result-item">
+                            <div class="result-label">Default Probability</div>
+                            <div class="result-value" id="probabilityResult">-</div>
+                        </div>
+                        <div class="col-md-4 result-item">
+                            <div class="result-label">Credit Score</div>
+                            <div class="result-value" id="creditScoreResult">-</div>
+                        </div>
+                        <div class="col-md-4 result-item">
+                            <div class="result-label">Rating</div>
+                            <div class="result-value" id="ratingResult">-</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Calculate loan to income ratio
+            function updateLoanRatio() {
+                const income = parseFloat($('#income').val()) || 0;
+                const loanAmount = parseFloat($('#loan_amount').val()) || 0;
+                const ratio = income > 0 ? (loanAmount / income) : 0;
+                $('#loanRatioDisplay').text(ratio.toFixed(2));
+            }
+
+            $('#income, #loan_amount').on('input', updateLoanRatio);
+            updateLoanRatio();
+
+            // Form submission with animation
+            $('#riskForm').submit(function(e) {
+                e.preventDefault();
+                
+                // Show loading state
+                const btn = $(this).find('button[type="submit"]');
+                btn.html('<i class="fas fa-spinner fa-spin me-2"></i> Calculating...');
+                btn.prop('disabled', true);
+                
+                $.ajax({
+                    url: '/',
+                    type: 'POST',
+                    data: $(this).serialize(),
+                    success: function(response) {
+                        if (response.error) {
+                            alert('Error: ' + response.error);
+                        } else {
+                            // Animate results
+                            $('#probabilityResult').text(response.probability);
+                            $('#creditScoreResult').text(response.credit_score);
+                            $('#ratingResult').text(response.rating);
+                            
+                            $('#results').hide().fadeIn(500);
+                            $('html, body').animate({
+                                scrollTop: $('#results').offset().top - 100
+                            }, 800);
+                        }
+                    },
+                    error: function() {
+                        alert('An error occurred while processing your request.');
+                    },
+                    complete: function() {
+                        btn.html('<i class="fas fa-calculator me-2"></i> Calculate Risk');
+                        btn.prop('disabled', false);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
