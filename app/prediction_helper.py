@@ -7,7 +7,7 @@ from pathlib import Path
 
 # Path to the saved model and its components
 BASE_DIR = Path(__file__).parent.parent  # Goes up one level from app/
-MODEL_PATH = BASE_DIR \ 'artifacts' \ 'model_data.joblib'
+MODEL_PATH = BASE_DIR / 'artifacts' / 'model_data.joblib'
 
 # Debugging output
 print(f"Model path: {MODEL_PATH}")
