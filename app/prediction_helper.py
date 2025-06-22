@@ -7,7 +7,7 @@ import joblib
 
 # Path to the saved model and its components
 <<<<<<< HEAD
-PATH = 'artifacts/model_data.joblib'
+PATH = PATH = os.path.join('artifacts','model_data.joblib')
 MODEL_PATH = os.path.join(os.path.dirname(__file__), '..', PATH)
 =======
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
