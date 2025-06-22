@@ -1,6 +1,9 @@
-joblib==1.3.2
-pandas==2.0.2
-streamlit==1.22.0
-numpy==1.25.0
-scikit-learn==1.3.0
-xgboost==2.0.3
+streamlit==1.41.1        # For the web app
+pandas==2.2.2            # Data manipulation
+scikit-learn==1.6.1      # ML model (check your model's compatible version)
+joblib==1.4.2            # For loading/saving models
+matplotlib==3.9.1        # Optional: Plotting
+seaborn==0.13.2          # Optional: Visualizations
+xgboost==3.0.0       # If using XGBoost
+tensorflow==2.19.0   # If using TF/Keras
+numpy==1.24.0        # More stable for scikit-learn
